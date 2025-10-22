@@ -98,9 +98,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (response.ok) {
-        messageDiv.textContent = result.message;
-        messageDiv.className = "success";
-        signupForm.reset();
+        try {
+          await fetchActivities(); // Primero actualizamos la lista
+          messageDiv.textContent = result.message;
+          messageDiv.className = "success";
+          signupForm.reset();
+        } catch (updateError) {
+          console.error("Error updating activities:", updateError);
+          messageDiv.textContent = "Signed up successfully but failed to refresh the list. Please reload the page.";
+          messageDiv.className = "warning";
+        }
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
